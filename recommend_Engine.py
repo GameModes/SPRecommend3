@@ -1,4 +1,4 @@
-import psycopg2, sys, json
+import psycopg2, sys, json, os
 from progress.bar import Bar
 
 c = psycopg2.connect(host="localhost", database="postgres", user="postgres", password="janneke", port="2020")
@@ -22,10 +22,9 @@ def relatiedicmaker (namelist, relatiedictionary):
         relatielist.remove(name)
         for relatie in relatielist:
             if len(relatiedictionary) < 5: #het product krijgt maximaal 4 relaties
-                laadpunt = "category" #defineert waar de lader nu is
-                sys.stdout.write('\r')
+                laadpunt = "category" #defineert wat de lader laad
                 sys.stdout.write('\r' + laadpunt + ' Relatie nummer ' + str(relatielist.index(relatie) + 1)+ "/"+ str(len(relatielist)) + " laden \n")
-                    #categorychecker
+                #categorychecker
                 relatiecursor.execute("SELECT category FROM products;")
                 namecursor.execute("SELECT category FROM products WHERE name='" + str(name) + "';")
                 namecategory = namecursor.fetchall()
