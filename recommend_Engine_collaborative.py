@@ -1,4 +1,4 @@
-import psycopg2
+import psycopg2, json
 
 
 
@@ -49,3 +49,6 @@ def productenvangelijken(Gelijkdic):
 IDtolist()
 RelatieIDmaker()
 productenvangelijken(Gelijkdic)
+with open ("Datarelatiedictcollab.json", "w") as outfile:
+    json.dump(RecommendProddic, outfile)
+print(RecommendProddic)
