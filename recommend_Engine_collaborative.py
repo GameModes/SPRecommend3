@@ -1,4 +1,4 @@
-import psycopg2, json
+import psycopg2, json, sys
 
 
 
@@ -21,7 +21,7 @@ def IDtolist(): #alle bekeken product ID's
 
 def RelatieIDmaker():
     hoeveelheid = 0
-    for x in IDlist:
+    for x in IDlist[:100]:
         Gelijklist = []
         if IDlist[IDlist.index(x)+1] == x:
             gelijkeniscursor.execute("SELECT profid FROM profiles_previously_viewed  WHERE prodid='" + str(x) + "';")
