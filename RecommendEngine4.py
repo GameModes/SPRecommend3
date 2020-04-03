@@ -1,5 +1,5 @@
-import psycopg2
-import random
+import psycopg2, random, json
+
 
 
 def get_cursor():
@@ -11,7 +11,7 @@ def get_all_items():
     cur = get_cursor()
     cur.execute("SELECT id, brand, subsubcategory FROM products WHERE brand IS NOT NULL; ")
     Allproductslist = cur.fetchall()
-    random.shuffle(Allproductslist)  # so every products has a chance to be recommended
+    random.shuffle(Allproductslist) #met dank aan Adam's slimme manier van kansgeving
     return Allproductslist
 
 def get_all_profiles():
@@ -23,38 +23,43 @@ def get_all_profiles():
 
 
 def get_similar(List):
-    list_similar_items_id = []
+    similaritemlist = []
     amountofvalues = len(List[0])
     for All_items in List:
         comparelist = List
         comparelist.remove(All_items)
-        similar_items_id = [All_items[0]]  # Always starts with id for primary key
+        similar_items_id = [All_items[0]]
         for comparing_item in comparelist:
             if amountofvalues == 2:
-                if All_items[1] == comparing_item[1]:  # if brands and category are the same, but the id's are not the same
+                if All_items[1] == comparing_item[1]:
                     similar_items_id.append(comparing_item[0])
                     if len(similar_items_id) > 3:
-                        list_similar_items_id.append(similar_items_id)
+                        similaritemlist.append(similar_items_id)
                         break
             if amountofvalues == 3:
-                if All_items[1] == comparing_item[1] and All_items[2] == comparing_item[2]:  # if brands and category are the same, but the id's are not the same
+                if All_items[1] == comparing_item[1] and All_items[2] == comparing_item[2]:
                     similar_items_id.append(comparing_item[0])
                     if len(similar_items_id) > 3:
-                        list_similar_items_id.append(similar_items_id)
+                        similaritemlist.append(similar_items_id)
                         break
-    return list_similar_items_id
+    return similaritemlist
+
+def csvfilewriter(similarlist):
+    with open("Datarelatieproducts.csv", "w") as outfile:
+        json.dump(similarlist, outfile)
 
 def contentfiltering():
-    Allproductslist = get_all_items() #gives all products in a list
-    similar_items = get_similar(Allproductslist) #gives similar products as ID in a list
+    Allproductslist = get_all_items()
+    similar_items = get_similar(Allproductslist)
+    csvfilewriter(similar_items)
     print("contentfiltering results: " + str(similar_items))
 
 def collaberativefiltering():
     Allprofileslist = get_all_profiles()  # gives all products in a list
     similar_items = get_similar(Allprofileslist)  # gives similar profiles as ID in a list
+    csvfilewriter(similar_items)
     print("collaberativefiltering results: " + str(similar_items))
 
 
-if __name__ == "__main__":
-    contentfiltering()
-    collaberativefiltering()
+contentfiltering()
+collaberativefiltering()
