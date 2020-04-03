@@ -48,6 +48,10 @@ def csvfilewriter(similarlist):
     with open("Datarelatieproducts.csv", "w") as outfile:
         json.dump(similarlist, outfile)
 
+def csvfileadder(similarlist):
+    with open("Datarelatieproducts.csv", "a+") as outfile:
+        json.dump(similarlist, outfile)
+
 def contentfiltering():
     Allproductslist = get_all_items()
     similar_items = get_similar(Allproductslist)
@@ -57,7 +61,7 @@ def contentfiltering():
 def collaberativefiltering():
     Allprofileslist = get_all_profiles()  # gives all products in a list
     similar_items = get_similar(Allprofileslist)  # gives similar profiles as ID in a list
-    csvfilewriter(similar_items)
+    csvfileadder(similar_items)
     print("collaberativefiltering results: " + str(similar_items))
 
 
